@@ -35,4 +35,6 @@ if __name__ == '__main__':
     print("mergesort:")
     print(timeit.timeit('data = random_data() ; mergesort(data)', setup="from __main__ import random_data ; from mergesort import mergesort, merge", number=3))
 
+    print("top_down_mergesort:")
+    print(timeit.timeit('data = random_data() ; top_down_mergesort(data)', setup="from __main__ import random_data ; from mergesort import top_down_merge, top_down_mergesort, top_down_mergesort_split_merge", number=3))
 
