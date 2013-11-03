@@ -44,31 +44,3 @@ def quicksort(array, left_index, right_index):
         quicksort(array, left_index, new_pivot_index - 1)
         quicksort(array, new_pivot_index + 1, right_index)
 
-def write_random_data():
-    # write out a random list of floats:
-    a = [random.random() for i in range(0, 100000)]
-    with open("rand_array.pickle", "wb") as f:
-        pickle.dump(a, f, pickle.HIGHEST_PROTOCOL)
-
-def random_data():
-    data = []
-    with open('rand_array.pickle', 'rb') as f:
-        data = pickle.load(f)
-    return data
-
-if __name__ == '__main__':
-    import random
-    import pickle
-    import timeit
-
-    # write_random_data()
-
-    print("quicksort_recursive:")
-    print(timeit.timeit('data = random_data() ; quicksort_recursive(data)',
-        setup="from __main__ import random_data, quicksort_recursive", number=10))
-
-    print("quicksort with in place partitioning:")
-    print(timeit.timeit('data = random_data() ; quicksort(data,0 , len(data)-1)',
-        setup="from __main__ import random_data, partition, quicksort", number=10))
-
-
