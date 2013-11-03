@@ -16,9 +16,6 @@ def quicksort_recursive(array):
             greater.append(item)
     return (quicksort_recursive(less) + [pivot] + quicksort_recursive(greater))
 
-a = [9, 2, 5, 1, 4, 6, 7, 59493, 3, 3929, 2, 3, 4, ]
-
-print(quicksort_recursive(a))
 
 def partition(array, left_index, right_index, pivot_index):
     pivot_value        = array[pivot_index]
@@ -47,9 +44,31 @@ def quicksort(array, left_index, right_index):
         quicksort(array, left_index, new_pivot_index - 1)
         quicksort(array, new_pivot_index + 1, right_index)
 
-a = [9, 2, 5, 1, 4, 6, 7, 59493, 3, 3929, 2, 3, 4]
+def write_random_data():
+    # write out a random list of floats:
+    a = [random.random() for i in range(0, 100000)]
+    with open("rand_array.pickle", "wb") as f:
+        pickle.dump(a, f, pickle.HIGHEST_PROTOCOL)
 
-quicksort(a, 0 , len(a)-1)
+def random_data():
+    data = []
+    with open('rand_array.pickle', 'rb') as f:
+        data = pickle.load(f)
+    return data
 
-print(a)
+if __name__ == '__main__':
+    import random
+    import pickle
+    import timeit
+
+    # write_random_data()
+
+    print("quicksort_recursive:")
+    print(timeit.timeit('data = random_data() ; quicksort_recursive(data)',
+        setup="from __main__ import random_data, quicksort_recursive", number=10))
+
+    print("quicksort with in place partitioning:")
+    print(timeit.timeit('data = random_data() ; quicksort(data,0 , len(data)-1)',
+        setup="from __main__ import random_data, partition, quicksort", number=10))
+
 
