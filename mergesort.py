@@ -4,7 +4,6 @@
 def top_down_mergesort(a):
     """Run a top down mergesort on a list a
 
-    >>> from mergesort import top_down_merge, top_down_mergesort, top_down_mergesort_split_merge
     >>> a = [4, 6, 8, 3, 5667, 333, 7, 8, 5, 2, 6, 8, 0, 9, 8]
     >>> top_down_mergesort(a)
     >>> print(a)
@@ -37,7 +36,6 @@ def top_down_mergesort_split_merge(a, ibegin, iend, b):
 def mergesort(m):
     """Run a mergesort on a list m
 
-    >>> from mergesort import mergesort, merge
     >>> a = [4, 6, 8, 3, 5667, 333, 7, 8, 5, 2, 6, 8, 0, 9, 8]
     >>> print(mergesort(a))
     [0, 2, 3, 4, 5, 6, 6, 7, 8, 8, 8, 8, 9, 333, 5667]
