@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Worst Case:    O(n^2)
+# Best Case:     O(n log n)
+# Average Case:  O(n log n)
+
 def quicksort_recursive(array):
     """Run a recursive implementation of quicksort on a list
 

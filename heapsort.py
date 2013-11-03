@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Worst Case:    O(n log n)
+# Best Case:     O(n log n)
+# Average Case:  O(n log n)
+
 def heapsort(a):
     """Run heapsort on a list a
 

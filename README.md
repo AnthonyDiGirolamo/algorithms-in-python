@@ -4,7 +4,9 @@ algorithms-in-python
 Test Runs
 ---------
 
-### Sorting 100,000 Floats in  Python 2.7.5, 3.3.2 and PyPy 2.1.0
+### Sorting 100,000 Floats
+
+#### Python 2.7.5
 
     $ python test_sorting.py
     2.7.5 (default, Oct 25 2013, 11:07:52)
@@ -20,6 +22,8 @@ Test Runs
     heapsort:
     3.60810089111
 
+#### Python 3.3.2
+
     $ python3 test_sorting.py
     3.3.2 (default, Oct 21 2013, 12:01:11)
     [GCC 4.2.1 Compatible Apple LLVM 4.2 (clang-425.0.28)]
@@ -33,6 +37,8 @@ Test Runs
     2.366787152001052
     heapsort:
     3.2705076370002644
+
+#### PyPy 2.1.0
 
     $ /usr/local/Cellar/pypy/2.1.0/libexec/bin/pypy test_sorting.py
     2.7.3 (480845e6b1dd, Jul 31 2013, 10:58:28)

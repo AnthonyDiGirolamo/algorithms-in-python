@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Worst Case:    O(n log n)
+# Best Case:     O(n log n)
+# Average Case:  O(n log n)
+
 def top_down_mergesort(a):
     """Run a top down mergesort on a list a
 

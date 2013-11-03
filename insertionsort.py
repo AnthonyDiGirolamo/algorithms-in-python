@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Worst Case:    O(n^2)
+# Best Case:     O(n)
+# Average Case:  O(n^2)
+
 def insertionsort(array):
     """Run insertionsort on a list
 
