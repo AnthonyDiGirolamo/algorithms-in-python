@@ -5,9 +5,12 @@ class HashTable:
     """Simple Hash table implementation using open addressing for collisions
 
     >>> h = HashTable()
-    >>> h["set"] = "value"
-    >>> h["set"]
-    'value'
+    >>> h["foo"] = "bar"
+    >>> h["foo"]
+    'bar'
+    >>> h["foo"] = "baz"
+    >>> h["foo"]
+    'baz'
     """
 
     def __init__(self, initial_size=300):
@@ -16,35 +19,26 @@ class HashTable:
         self.count = 0
 
     def __getitem__(self, key):
-        index = self.next_occupied_index(key)
-        return self.array[index]
-
-    def __setitem__(self, key, value):
-        index = self.next_available_index(key)
-        if self.array[index] is None:
-            self.array[index] = value
-            self.count += 1
-        else:
-            raise "Collision"
-
-    def _hash(self, key):
-        return (hash(key) & self.size)
-
-    def next_occupied_index(self, key):
         index = self._hash(key)
         if index >= self.size or index < 0:
             index = 0
-        while index < self.size and self.array[index] is None:
+        while index < self.size and self.array[index][0] != key:
             index += 1
-        return index
+        return self.array[index][1]
 
-    def next_available_index(self, key):
+    def __setitem__(self, key, value):
         index = self._hash(key)
         if index >= self.size or index < 0:
             index = 0
         while index < self.size and self.array[index] is not None:
+            if self.array[index][0] == key:
+                break
             index += 1
-        return index
+        self.array[index] = (key, value)
+        self.count += 1
+
+    def _hash(self, key):
+        return (hash(key) & self.size)
 
 if __name__ == "__main__":
     import doctest
