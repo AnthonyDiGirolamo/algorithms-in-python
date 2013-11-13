@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+#           Average     Worst
+# Space     O(n)        O(n)
+# Search    O(log n)    O(n)
+# Insert    O(log n)    O(n)
+# Delete    O(log n)    O(n)
+
 class Node:
     """Binary Search Tree Node class
 
