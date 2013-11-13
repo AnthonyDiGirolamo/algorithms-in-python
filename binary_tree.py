@@ -7,7 +7,6 @@ class Node:
     >>> btree = Node(12)
     >>> for i in [5, 18, 2, 9, 15, 19, 13, 17]:
     ...     btree.insert(i)
-    ...
     >>> btree.print_in_order()
     2
     5
@@ -39,7 +38,6 @@ class Node:
         >>> btree = Node(12)
         >>> for i in [5, 18, 2, 9, 15, 19, 13, 17]:
         ...     btree.insert(i)
-        ...
         >>> btree.payload
         12
         >>> btree.left.payload
@@ -47,11 +45,6 @@ class Node:
         >>> btree.right.payload
         18
         """
-        # >>> btree.right.right.payload
-        # 19
-        # >>> btree.right.left.payload
-        # 15
-        # """
         previous_node = None
         node = self
         while node is not None:
@@ -107,7 +100,6 @@ class Node:
         >>> btree = Node(12)
         >>> for i in [5, 18, 2, 9, 15, 19, 13, 17]:
         ...     btree.insert(i)
-        ...
         >>> print(btree)
                 19
             18
@@ -129,7 +121,6 @@ class Node:
         # └-- 5
         #     ├-- 9
         #     └-- 2
-        # """
         s = ""
         if self.right:
             s += self.right.__str__(depth+1)
@@ -147,50 +138,37 @@ class Node:
             for node in self.right.in_order_walk():
                 yield node
 
-    def transplant(self, unode, vnode):
-        """ Swap subtrees
+    def minimum(self):
+        """ Return the minimum node from self
 
         >>> btree = Node(12)
         >>> for i in [5, 18, 2, 9, 15, 19, 13, 17]:
         ...     btree.insert(i)
-        ...
-        >>> print(btree)
-                19
-            18
-                    17
-                15
-                    13
-        12
-                9
-            5
-                2
-        <BLANKLINE>
-        >>> btree.transplant(btree.search(17), btree.search(13))
-        >>> print(btree)
-                19
-            18
-                    13
-                15
-                    17
-        12
-                9
-            5
-                2
-        <BLANKLINE>
-        >>> btree.transplant(btree.search(5), btree.search(15))
-        >>> print(btree)
-                19
-            18
-                    9
-                5
-                    2
-        12
-                17
-            15
-                13
-        <BLANKLINE>
+        >>> btree.minimum()
+        2
         """
 
+        node = self
+        while node.left is not None:
+            node = node.left
+        return node
+
+    def maximum(self):
+        """ Return the maximum node from self
+
+        >>> btree = Node(12)
+        >>> for i in [5, 18, 2, 9, 15, 19, 13, 17]:
+        ...     btree.insert(i)
+        >>> btree.maximum()
+        19
+        """
+
+        node = self
+        while node.right is not None:
+            node = node.right
+        return node
+
+    def transplant(self, unode, vnode):
         #TODO handle this case
         if unode.parent is None:
             self = vnode
@@ -201,21 +179,90 @@ class Node:
         if vnode:
             vnode.parent = unode.parent
 
-class BinaryTree:
+    def delete(self, payload):
+        """ Delete a node
 
-    def __init__(self, root_payload=None):
-        self.root = Node(root_payload)
-        self.count = 1
+        >>> btree = Node(12)
+        >>> for i in [5, 18, 2, 9, 15, 19, 13, 17]:
+        ...     btree.insert(i)
+        >>> print(btree)
+                19
+            18
+                    17
+                15
+                    13
+        12
+                9
+            5
+                2
+        <BLANKLINE>
+        >>> btree.delete(13) ; print(btree)
+                19
+            18
+                    17
+                15
+        12
+                9
+            5
+                2
+        <BLANKLINE>
+        >>> btree.delete(15) ; print(btree)
+                19
+            18
+                17
+        12
+                9
+            5
+                2
+        <BLANKLINE>
+        >>> btree.delete(19) ; btree.delete(18) ; print(btree)
+            17
+        12
+                9
+            5
+                2
+        <BLANKLINE>
+        >>> btree.delete(5) ; print(btree)
+            17
+        12
+            9
+                2
+        <BLANKLINE>
+        >>> btree.delete(12) ; print(btree)
+        17
+            9
+                2
+        <BLANKLINE>
+        """
 
-    def insert(self, payload):
-        self.root.insert(payload)
-        self.count += 1
+        node = self.search(payload) if type(payload) is not Node else payload
+        if node.left is None:
+            self.transplant(node, node.right)
+        elif node.right is None:
+            self.transplant(node, node.left)
+        else:
+            successor = node.right.minimum()
+            if successor.parent != node:
+                self.transplant(successor, successor.right)
+                successor.right = node.right
+                successor.right.parent = successor
+            self.transplant(node, successor)
+            successor.left = node.left
+            successor.left.parent = successor
 
-    def delete(self):
-        pass
 
-    def __repr__(self):
-        return repr([i for i in self])
+# class BinaryTree:
+
+#     def __init__(self, root_payload=None):
+#         self.root = Node(root_payload)
+#         self.count = 1
+
+#     def insert(self, payload):
+#         self.root.insert(payload)
+#         self.count += 1
+
+#     def __repr__(self):
+#         return repr([i for i in self])
 
 if __name__ == "__main__":
     import doctest
