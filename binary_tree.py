@@ -1,5 +1,25 @@
 
 class Node:
+    """Binary Tree Node class
+
+    >>> btree = Node('5')
+    >>> for i in ['4', '6', 'r', 'v', 'a', 'x']:
+    ...     btree.insert(i)
+    ...
+    >>> btree.print_in_order()
+    4
+    5
+    6
+    a
+    r
+    v
+    x
+    >>> [node.payload for node in btree.in_order_walk()]
+    ['4', '5', '6', 'a', 'r', 'v', 'x']
+    >>> btree.search('x')
+    'x'
+    >>> btree.search('z')
+    """
 
     def __init__(self, payload, left=None, right=None, parent=None):
         self.payload = payload
@@ -11,33 +31,65 @@ class Node:
         return repr(self.payload)
 
     def insert(self, payload):
-        if payload < self.payload:
-            if self.left is None:
-                self.left = Node(payload, parent=self)
+        node = self
+        previous_node = None
+        while node is not None:
+            previous_node = node
+            if payload < node.payload:
+                node = node.left
             else:
-                self.left.insert(payload)
+                node = node.right
+        if previous_node is None:
+            self = Node(payload)
+        if payload < previous_node.payload:
+            previous_node.left = Node(payload)
         else:
-            if self.right is None:
-                self.right = Node(payload, parent=self)
-            else:
-                self.right.insert(payload)
+            previous_node.right = Node(payload)
+        # Recursive
+        # if payload < self.payload:
+        #     if self.left is None:
+        #         self.left = Node(payload, parent=self)
+        #     else:
+        #         self.left.insert(payload)
+        # else:
+        #     if self.right is None:
+        #         self.right = Node(payload, parent=self)
+        #     else:
+        #         self.right.insert(payload)
 
-    def print_breadth_first(self):
+    def search(self, data):
+        node = self
+        while node and node.payload != data:
+            if data < node.payload:
+                node = node.left
+            else:
+                node = node.right
+        return node
+        # Recursive
+        # if data == self.payload:
+        #     return self
+        # elif data < self.payload:
+        #     return self.left.search(data) if self.left else None
+        # else:
+        #     return self.right.search(data) if self.right else None
+
+    def print_in_order(self):
         if self.left:
-            self.left.print_breadth_first()
+            self.left.print_in_order()
         print(self.payload)
         if self.right:
-            self.right.print_breadth_first()
+            self.right.print_in_order()
+
+    def in_order_walk(self):
+        if self.left:
+            for node in self.left.in_order_walk():
+                yield node
+        yield self
+        if self.right:
+            for node in self.right.in_order_walk():
+                yield node
 
 class BinaryTree:
-    """BinaryTree class
-
-    >>> btree = BinaryTree('a')
-    >>> btree.insert('b')
-    >>> btree.insert('A')
-    >>> btree.insert('c')
-    >>> btree.root.print_breadth_first()
-    """
 
     def __init__(self, root_payload=None):
         self.root = Node(root_payload)
@@ -50,27 +102,6 @@ class BinaryTree:
 
     def __repr__(self):
         return repr([i for i in self])
-
-    # def __iter__(self):
-    #     self.current_node = None
-    #     return self
-
-    # def __next__(self):
-    #     if self.current_node == None:
-    #         self.current_node = self.root
-    #     elif self.current_node.left != None:
-    #         self.current_node = self.current_node.left
-    #     elif self.current_node.right != None:
-    #         self.current_node = self.current_node.right
-    #     else:
-    #         raise StopIteration
-    #     return self.current_node.payload
-
-    def __len__(self):
-        return self.size
-
-    # def __getitem__(self, index):
-    #     return self.todo_items[index]
 
 if __name__ == "__main__":
     import doctest
