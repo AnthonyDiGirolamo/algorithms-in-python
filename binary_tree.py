@@ -139,7 +139,7 @@ class Node:
 class BinaryTree:
 
     def __init__(self, root_payload=None):
-        self.root = Node(root_payload) if root_payload is not None else None
+        self.root = Node(root_payload)
 
     def minimum(self):
         return self.root.minimum()
