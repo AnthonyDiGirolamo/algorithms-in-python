@@ -65,6 +65,50 @@ def contains_only_unique_chars(chars, max_count=1):
     #     seen |= 1 << (ord(c) - ord("a"))
     # return True
 
+def is_anagram(*strings):
+    """Check if multiple strings are anagrams or not
+
+    Examples:
+
+        >>> is_anagram("race", "cear")
+        True
+        >>> is_anagram("awesome", "emosewa")
+        True
+        >>> is_anagram("racecar", "racecar")
+        True
+        >>> is_anagram("aaaaaaaaaaa", "bbbbbbb")
+        False
+        >>> is_anagram("crap", "carp")
+        True
+        >>> is_anagram("crap", "carp", "prac")
+        True
+        >>> is_anagram("crap", "carp", "prac", "stuf")
+        False
+        >>> is_anagram("foo", "bar")
+        False
+    """
+
+    # Count each character
+
+    character_counts = []
+    for word_index, word in enumerate(strings):
+        character_counts.append({})
+        for index, c in enumerate(word):
+            character_counts[word_index][c] = character_counts[word_index].get(c, 0) + 1
+    for letter in character_counts[0].keys():
+        letter_counts = [w.get(letter, None) for w in character_counts]
+        if not letter_counts.count(letter_counts[0]) == len(letter_counts):
+            return False
+    return True
+
+    # Sorting the strings
+
+    # sorted_words = [sorted(word) for word in strings]
+    # return sorted_words.count(sorted_words[0]) == len(sorted_words)
+
+    # return sorted(word1) == sorted(word2)
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)
