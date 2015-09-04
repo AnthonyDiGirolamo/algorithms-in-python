@@ -65,6 +65,9 @@ def contains_only_unique_chars(chars, max_count=1):
     #     seen |= 1 << (ord(c) - ord("a"))
     # return True
 
+def is_uniform(iterable):
+    return iterable.count(iterable[0]) == len(iterable)
+
 def is_anagram(*strings):
     """Check if multiple strings are anagrams or not
 
@@ -97,7 +100,7 @@ def is_anagram(*strings):
             character_counts[word_index][c] = character_counts[word_index].get(c, 0) + 1
     for letter in character_counts[0].keys():
         letter_counts = [w.get(letter, None) for w in character_counts]
-        if not letter_counts.count(letter_counts[0]) == len(letter_counts):
+        if not is_uniform(letter_counts):
             return False
     return True
 
