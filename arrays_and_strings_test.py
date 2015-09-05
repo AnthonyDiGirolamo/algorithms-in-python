@@ -4,14 +4,6 @@ import pytest
 import pprint
 pp = pprint.PrettyPrinter(indent=4).pprint
 
-# @pytest.fixture
-# def today():
-#     return date.today()
-
-# def test_todos_init(todos):
-#     assert len(todos) == 5
-#     assert len(todos.todo_items) == 5
-
 def contains_only_unique_chars(chars, max_count=1):
     """Check a string for unique charachters
 
@@ -111,6 +103,119 @@ def is_anagram(*strings):
 
     # return sorted(word1) == sorted(word2)
 
+
+class LinkedListNode:
+    @staticmethod
+    def to_list(head):
+        yield head.payload
+        if head.next_node:
+            for node in LinkedListNode.to_list(head.next_node):
+                yield node
+
+    @staticmethod
+    def to_list_backwards(tail):
+        yield tail.payload
+        if tail.prev_node:
+            for node in LinkedListNode.to_list_backwards(tail.prev_node):
+                yield node
+
+    @staticmethod
+    def delete_node(head, payload):
+        node = head
+        if head.payload == payload:
+            return head
+        while node.next_node is not None:
+            if node.next_node.payload == payload:
+                node.next_node           = node.next_node.next_node
+                node.next_node.prev_node = node
+                return head
+            node = node.next_node
+        return head
+
+    def __init__(self, payload=None, next_node=None, prev_node=None):
+        self.payload = payload
+        self.next_node = next_node
+        self.prev_node = prev_node
+
+    def tail_node(self):
+        node = self
+        while node.next_node is not None:
+            node = node.next_node
+        return node
+
+    def append_to_tail(self, payload=None):
+        node = self
+        while node.next_node is not None:
+            node = node.next_node
+        node.next_node = LinkedListNode(payload=payload, prev_node=node)
+        return self
+
+    def __repr__(self):
+        self.payload
+
+def remove_duplicates(head, allowed_duplicates=1):
+    item_counts = {}
+    item_counts[head.payload] = 1
+    node = head
+    while node.next_node is not None:
+        item_counts[node.next_node.payload] = item_counts.get(node.next_node.payload, 0) + 1
+        if item_counts[node.next_node.payload] > allowed_duplicates:
+            if node.next_node is None:
+                node.next_node = None
+            else:
+                # skip the duplicate
+                node.next_node = node.next_node.next_node
+                if node.next_node is not None:
+                    node.next_node.prev_node = node # for double linked
+        else:
+            node = node.next_node
+    return head
+
+@pytest.fixture
+def linked_list():
+    l = LinkedListNode(1).append_to_tail(2).append_to_tail(3)
+    return l
+
+@pytest.fixture
+def linked_list_with_duplicates():
+    l = LinkedListNode('a').append_to_tail('b').append_to_tail('c').append_to_tail('a').append_to_tail('a').append_to_tail('d')
+    return l
+
+def test_append_to_tail(linked_list):
+    assert linked_list.payload == 1
+    assert linked_list.next_node.payload == 2
+    assert linked_list.next_node.next_node.payload == 3
+    assert linked_list.next_node.next_node.next_node == None
+    assert linked_list.next_node.prev_node.payload == 1
+
+def test_to_list(linked_list):
+    assert [p for p in LinkedListNode.to_list(linked_list)] == [1,2,3]
+
+def test_to_list_backwards(linked_list):
+    assert [p for p in LinkedListNode.to_list_backwards(linked_list.tail_node())] == [3,2,1]
+
+def test_delete_node(linked_list):
+    assert [p for p in LinkedListNode.to_list(LinkedListNode.delete_node(linked_list, 2))] == [1,3]
+
+def test_remove_duplicates(linked_list_with_duplicates):
+    n = linked_list_with_duplicates
+    remove_duplicates(n)
+    ll = LinkedListNode.to_list(n)
+    assert [p for p in ll] == "a b c d".split()
+
+def test_remove_duplicates2(linked_list_with_duplicates):
+    n = linked_list_with_duplicates
+    n.append_to_tail('d')
+    remove_duplicates(n)
+    ll = LinkedListNode.to_list(n)
+    assert [p for p in ll] == "a b c d".split()
+    ll = LinkedListNode.to_list_backwards(n.tail_node())
+    assert [p for p in ll] == "d c b a".split()
+
+# def test_pytest_exceptions():
+#     with pytest.raises(ZeroDivisionError) as exception_info:
+#         1 / 0
+#     assert 'integer division or modulo by zero' in str(exception_info.value)
 
 if __name__ == "__main__":
     import doctest
