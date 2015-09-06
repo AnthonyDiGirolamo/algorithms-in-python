@@ -254,7 +254,6 @@ def alphabet():
 def test_nth_to_last_element(alphabet):
     assert alphabet.nth_to_last_element(3).payload == "x"
 
-
 def test_delete(alphabet):
     n = alphabet
     for i in range(6-1):
@@ -263,6 +262,51 @@ def test_delete(alphabet):
     alphabet.delete()
     l = LinkedListNode.to_list(alphabet)
     assert [p for p in l] == "b c d e g h i j k l m n o p q r s t u v w x y z".split()
+
+def number_list(nstring):
+    payloads = [int(n) for n in nstring.split()]
+    number = LinkedListNode(payloads[0])
+    for p in payloads[1:]:
+        number.append_to_tail(p)
+    return number
+
+def sum_numbers(n1, n2):
+    p1 = n1
+    p2 = n2
+    n3 = LinkedListNode()
+    n  = n3
+    carry = 0
+    while p1 is not None or p2 is not None:
+        s = int(
+            (p1.payload if p1 else 0) +
+            (p2.payload if p2 else 0))
+        ones_place = int(s % 10) + carry
+        carry      = int(s / 10)
+        n.payload = ones_place
+        if p1:
+            p1 = p1.next_node
+        if p2:
+            p2 = p2.next_node
+        if p1 or p2:
+            n.next_node = LinkedListNode()
+            n = n.next_node
+    return n3
+
+def test_add_numbers():
+    n1 = number_list("3 1 5")
+    n2 = number_list("5 9 2")
+    n3 = sum_numbers(n1, n2)
+    n3_list = [p for p in LinkedListNode.to_list(n3)]
+    print(n3_list)
+    assert n3_list == [8, 0, 8]
+
+    n1 = number_list("1 5")
+    n2 = number_list("5 9 2")
+    n3 = sum_numbers(n1, n2)
+    n3_list = [p for p in LinkedListNode.to_list(n3)]
+    print(n3_list)
+    assert n3_list == [6, 4, 3]
+
 
 # def test_pytest_exceptions():
 #     with pytest.raises(ZeroDivisionError) as exception_info:
