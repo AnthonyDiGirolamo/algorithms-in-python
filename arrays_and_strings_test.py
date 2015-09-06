@@ -103,7 +103,6 @@ def is_anagram(*strings):
 
     # return sorted(word1) == sorted(word2)
 
-
 class LinkedListNode:
     @staticmethod
     def to_list(head):
@@ -120,7 +119,7 @@ class LinkedListNode:
                 yield node
 
     @staticmethod
-    def delete_node(head, payload):
+    def find_and_delete_node(head, payload):
         node = head
         if head.payload == payload:
             return head
@@ -150,8 +149,37 @@ class LinkedListNode:
         node.next_node = LinkedListNode(payload=payload, prev_node=node)
         return self
 
+    def length(self):
+        size = 0
+        node = self
+        while node.next_node is not None:
+            size += 1
+            node = node.next_node
+        return size
+
+    def nth_to_last_element(self, n):
+        p1 = self
+        p2 = self
+        for i in range(n-1):
+            p2 = p2.next_node
+        while p2.next_node is not None:
+            p1 = p1.next_node
+            p2 = p2.next_node
+        return p1
+
+    def delete(self):
+        # can't delete if the last node
+        if self.next_node is None:
+            return False
+        self.payload = self.next_node.payload
+        self.next_node = self.next_node.next_node
+        return True
+
     def __repr__(self):
-        self.payload
+        return self.payload
+
+    def __str__(self):
+        return str(self.payload)
 
 def remove_duplicates(head, allowed_duplicates=1):
     item_counts = {}
@@ -178,7 +206,10 @@ def linked_list():
 
 @pytest.fixture
 def linked_list_with_duplicates():
-    l = LinkedListNode('a').append_to_tail('b').append_to_tail('c').append_to_tail('a').append_to_tail('a').append_to_tail('d')
+    payloads = "a b c a a d".split()
+    l = LinkedListNode(payloads[0])
+    for p in payloads[1:]:
+        l.append_to_tail(p)
     return l
 
 def test_append_to_tail(linked_list):
@@ -195,7 +226,7 @@ def test_to_list_backwards(linked_list):
     assert [p for p in LinkedListNode.to_list_backwards(linked_list.tail_node())] == [3,2,1]
 
 def test_delete_node(linked_list):
-    assert [p for p in LinkedListNode.to_list(LinkedListNode.delete_node(linked_list, 2))] == [1,3]
+    assert [p for p in LinkedListNode.to_list(LinkedListNode.find_and_delete_node(linked_list, 2))] == [1,3]
 
 def test_remove_duplicates(linked_list_with_duplicates):
     n = linked_list_with_duplicates
@@ -211,6 +242,27 @@ def test_remove_duplicates2(linked_list_with_duplicates):
     assert [p for p in ll] == "a b c d".split()
     ll = LinkedListNode.to_list_backwards(n.tail_node())
     assert [p for p in ll] == "d c b a".split()
+
+@pytest.fixture
+def alphabet():
+    payloads = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split()
+    l = LinkedListNode(payloads[0])
+    for p in payloads[1:]:
+        l.append_to_tail(p)
+    return l
+
+def test_nth_to_last_element(alphabet):
+    assert alphabet.nth_to_last_element(3).payload == "x"
+
+
+def test_delete(alphabet):
+    n = alphabet
+    for i in range(6-1):
+        n = n.next_node
+    n.delete()
+    alphabet.delete()
+    l = LinkedListNode.to_list(alphabet)
+    assert [p for p in l] == "b c d e g h i j k l m n o p q r s t u v w x y z".split()
 
 # def test_pytest_exceptions():
 #     with pytest.raises(ZeroDivisionError) as exception_info:
