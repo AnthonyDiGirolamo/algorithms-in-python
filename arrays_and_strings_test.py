@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pytest
-
+import pdb
 import pprint
 pp = pprint.PrettyPrinter(indent=4).pprint
 
@@ -212,29 +212,29 @@ def linked_list_with_duplicates():
         l.append_to_tail(p)
     return l
 
-def test_append_to_tail(linked_list):
+def test_linked_list_append_to_tail(linked_list):
     assert linked_list.payload == 1
     assert linked_list.next_node.payload == 2
     assert linked_list.next_node.next_node.payload == 3
     assert linked_list.next_node.next_node.next_node == None
     assert linked_list.next_node.prev_node.payload == 1
 
-def test_to_list(linked_list):
+def test_linked_list_to_list(linked_list):
     assert [p for p in LinkedListNode.to_list(linked_list)] == [1,2,3]
 
-def test_to_list_backwards(linked_list):
+def test_linked_list_to_list_backwards(linked_list):
     assert [p for p in LinkedListNode.to_list_backwards(linked_list.tail_node())] == [3,2,1]
 
-def test_delete_node(linked_list):
+def test_linked_list_delete_node(linked_list):
     assert [p for p in LinkedListNode.to_list(LinkedListNode.find_and_delete_node(linked_list, 2))] == [1,3]
 
-def test_remove_duplicates(linked_list_with_duplicates):
+def test_linked_list_remove_duplicates(linked_list_with_duplicates):
     n = linked_list_with_duplicates
     remove_duplicates(n)
     ll = LinkedListNode.to_list(n)
     assert [p for p in ll] == "a b c d".split()
 
-def test_remove_duplicates2(linked_list_with_duplicates):
+def test_linked_list_remove_duplicates2(linked_list_with_duplicates):
     n = linked_list_with_duplicates
     n.append_to_tail('d')
     remove_duplicates(n)
@@ -251,10 +251,10 @@ def alphabet():
         l.append_to_tail(p)
     return l
 
-def test_nth_to_last_element(alphabet):
+def test_linked_list_nth_to_last_element(alphabet):
     assert alphabet.nth_to_last_element(3).payload == "x"
 
-def test_delete(alphabet):
+def test_linked_list_delete(alphabet):
     n = alphabet
     for i in range(6-1):
         n = n.next_node
@@ -292,7 +292,7 @@ def sum_numbers(n1, n2):
             n = n.next_node
     return n3
 
-def test_add_numbers():
+def test_linked_list_add_numbers():
     n1 = number_list("3 1 5")
     n2 = number_list("5 9 2")
     n3 = sum_numbers(n1, n2)
@@ -306,12 +306,6 @@ def test_add_numbers():
     n3_list = [p for p in LinkedListNode.to_list(n3)]
     print(n3_list)
     assert n3_list == [6, 4, 3]
-
-
-# def test_pytest_exceptions():
-#     with pytest.raises(ZeroDivisionError) as exception_info:
-#         1 / 0
-#     assert 'integer division or modulo by zero' in str(exception_info.value)
 
 if __name__ == "__main__":
     import doctest
