@@ -6,7 +6,6 @@ import pdb
 import pprint
 pp = pprint.PrettyPrinter(indent=4).pprint
 
-
 #           Average     Worst
 # Space     O(n)        O(n)
 # Search    O(log n)    O(n)
