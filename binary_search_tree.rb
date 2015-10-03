@@ -17,7 +17,7 @@ end
 using Blank
 
 class BSTNode
-  attr_accessor :left, :right, :data
+  attr_accessor :left, :right, :parent, :data
   def initialize(data = nil)
     self.data = data
   end
@@ -36,6 +36,7 @@ class BSTNode
         node = node.right
       end
     end
+    new_node.parent = previous
     if data < previous.data
       previous.left = new_node
     else
@@ -56,7 +57,7 @@ class BSTNode
     return to_enum(:in_order) unless block_given?
 
     left.in_order{|e| yield e} if left.present?
-    yield data
+    yield self
     right.in_order{|e| yield e} if right.present?
   end
 
@@ -85,21 +86,39 @@ class BSTNode
       # pp h
     end
   end
+
+  def root_node
+    root = self
+    while root.parent.present?
+      root = root.parent
+    end
+    return root
+  end
+
+  def next_in_order
+    last_node = nil
+    root_node.in_order do |node|
+      return node if last_node == self
+      last_node = node
+    end
+    return false
+  end
 end
 
-bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e'
+bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e' << '0' << 'b'
 
-pp bst.in_order.collect{|e| e.upcase}
+pp bst.in_order.collect{|e| e.data.upcase}
 pp bst.pre_order.collect{|e| e.upcase}
 
 puts bst.print_tree
+pp bst.left.left.left.next_in_order.data
+pp bst.right.right.next_in_order
 
 depth_elements = bst.depth_arrays
 pp depth_elements
-
 # if you want just the arrays in order
-pp depth_elements.sort.collect{|(depth,list)| list}
-pp depth_elements.sort_by { |k, v| k }.collect(&:last)
+# pp depth_elements.sort.collect{|(depth,list)| list}
+# pp depth_elements.sort_by { |k, v| k }.collect(&:last)
 pp depth_elements.sort.collect(&:last)
 
 class BinarySearchTree
