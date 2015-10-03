@@ -71,7 +71,7 @@ class BSTNode
 
   def data_and_depth(depth = 0)
     return to_enum(:data_and_depth, depth) unless block_given?
-    left.data_and_depth(depth+1) {|e| yield e} if left.present?
+    left.data_and_depth(depth+1)  {|e| yield e} if left.present?
     right.data_and_depth(depth+1) {|e| yield e} if right.present?
     yield [depth, data]
   end
@@ -83,7 +83,7 @@ class BSTNode
       # pp depth
       # pp data
       # pp h
-    end #.sort.collect{|(depth,list)| list} # if you want just the arrays in order
+    end
   end
 end
 
@@ -94,7 +94,13 @@ pp bst.pre_order.collect{|e| e.upcase}
 
 puts bst.print_tree
 
-pp bst.depth_arrays
+depth_elements = bst.depth_arrays
+pp depth_elements
+
+# if you want just the arrays in order
+pp depth_elements.sort.collect{|(depth,list)| list}
+pp depth_elements.sort_by { |k, v| k }.collect(&:last)
+pp depth_elements.sort.collect(&:last)
 
 class BinarySearchTree
   def self.from_array(a)
