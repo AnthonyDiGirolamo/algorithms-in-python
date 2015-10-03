@@ -1,4 +1,4 @@
-#!/Users/anthony/.rbenv/shims/ruby
+#!/usr/bin/env ruby
 require 'rubygems'
 require 'pry-byebug'
 require 'pp'
@@ -22,9 +22,7 @@ class BSTNode
     self.data = data
   end
 
-  def <<(data)
-    insert(data)
-  end
+  def <<(data) insert(data) end
 
   def insert(data)
     self.data = data and return self if self.data.blank?
@@ -63,6 +61,7 @@ class BSTNode
   end
 
   def print_tree(depth = 0)
+    # same as in-order traversal but with a depth
     s = ""
     s += left.print_tree(depth+1) if left.present?
     s += "    "*depth + data.to_s + "\n"
@@ -70,17 +69,37 @@ class BSTNode
     return s
   end
 
+  def data_and_depth(depth = 0)
+    return to_enum(:data_and_depth, depth) unless block_given?
+    left.data_and_depth(depth+1) {|e| yield e} if left.present?
+    right.data_and_depth(depth+1) {|e| yield e} if right.present?
+    yield [depth, data]
+  end
+
+  def depth_arrays
+    data_and_depth.each_with_object({}) do |(depth, data), h|
+      h[depth] ||= []
+      h[depth] << data
+      # pp depth
+      # pp data
+      # pp h
+    end #.sort.collect{|(depth,list)| list} # if you want just the arrays in order
+  end
 end
 
 bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e'
+
 pp bst.in_order.collect{|e| e.upcase}
 pp bst.pre_order.collect{|e| e.upcase}
+
 puts bst.print_tree
+
+pp bst.depth_arrays
 
 class BinarySearchTree
   def self.from_array(a)
     bst = BSTNode.new
-    BinarySearchTree.partition(a) do |element|
+    partition(a) do |element|
       bst.insert element
     end
     return bst
@@ -103,13 +122,12 @@ class BinarySearchTree
     # pp right
     # puts ''
     yield source_array[midpoint]
-    BinarySearchTree.partition(left){|e| yield e}  if left.present?
-    BinarySearchTree.partition(right){|e| yield e} if right.present?
+    partition(left){|e| yield e}  if left.present?
+    partition(right){|e| yield e} if right.present?
   end
 end
 
 a = %w(m d x w z a e).sort
-pp a
 # b = BinarySearchTree.partition(a).collect{|e| e}
 # pp b
 puts BinarySearchTree.from_array(a).print_tree
