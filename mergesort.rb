@@ -18,7 +18,6 @@ using Blank
 
 def merge(left, right)
   result = []
-  puts "merging: [#{left.join(',')}] and [#{right.join(',')}]"
   while left.present? || right.present?
     if left.present? && right.present?
       if left.first <= right.first
@@ -32,25 +31,14 @@ def merge(left, right)
       result << right.shift
     end
   end
-  puts "merged result:"
-  pp result
   return result
 end
 
 def mergesort(a)
-  p "called mergesort on: #{a.join(',')}"
   return a if a.size == 1
   midpoint = a.size/2
-  left = a[0..midpoint-1] if midpoint-1 >= 0
-  puts "left coords:"
-  pp a[0..midpoint-1]
-  pp a[0,midpoint]
-  puts "left: #{left.join(',')}"
-  right = a[midpoint..a.size-1] if a.size-1 >= midpoint
-  puts "right coords:"
-  pp a[midpoint..a.size-1]
-  pp a[midpoint,a.size]
-  puts "right: #{right.join(',')}"
+  left = a[0,midpoint]
+  right = a[midpoint,a.size]
   left = mergesort(left)
   right = mergesort(right)
   return merge(left, right)
@@ -59,3 +47,5 @@ end
 a = [4, 6, 8, 3, 5667, 333, 7,
      8, 5, 2, 6, 8, 0, 9, 8]
 mergesort a
+
+# [0, 2, 3, 4, 5, 6, 6, 7, 8, 8, 8, 8, 9, 333, 5667]

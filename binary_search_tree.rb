@@ -111,8 +111,8 @@ pp bst.in_order.collect{|e| e.data.upcase}
 pp bst.pre_order.collect{|e| e.data.upcase}
 
 puts bst.print_tree
-pp bst.left.left.left.next_in_order.data
-pp bst.right.right.next_in_order
+pp "a" == bst.left.left.left.next_in_order.data
+pp false == bst.right.right.next_in_order
 
 depth_elements = bst.depth_arrays
 pp depth_elements
@@ -137,13 +137,13 @@ class BinarySearchTree
     midpoint = source_array.size/2
     # p 'midpoint'
     # pp [midpoint, source_array[midpoint]]
-    left  = source_array[0..midpoint-1] if midpoint-1 >= 0
+    left  = source_array[0, midpoint]
     # p 'left'
-    # pp [0, midpoint-1]
+    # pp [0, midpoint]
     # pp left
-    right = source_array[midpoint+1..source_array.size-1] if source_array.size-1 >= midpoint+1
+    right = source_array[midpoint+1..source_array.size]
     # p 'right'
-    # pp [midpoint+1, source_array.size-1]
+    # pp [midpoint+1, source_array.size]
     # pp right
     # puts ''
     yield source_array[midpoint]
@@ -176,10 +176,15 @@ class BinarySearchTree
   end
 end
 
-a = %w(m d x w z a e 0 b).sort
+puts '----------------------'
+a = %w(m d x w z a e).sort
+pp a
 b = BinarySearchTree.partition(a).collect{|e| e}
 pp b
+pp b == ["m", "d", "a", "e", "x", "w", "z"]
 puts BinarySearchTree.from_array(a).print_tree
+
+puts '----------------------'
 
 bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e' << '0' << 'b'
 puts bst.print_tree
