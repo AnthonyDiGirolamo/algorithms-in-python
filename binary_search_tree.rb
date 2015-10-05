@@ -48,7 +48,7 @@ class BSTNode
   def pre_order
     return to_enum(:pre_order) unless block_given?
 
-    yield data
+    yield self
     left.pre_order{|e| yield e} if left.present?
     right.pre_order{|e| yield e} if right.present?
   end
@@ -108,7 +108,7 @@ end
 bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e' << '0' << 'b'
 
 pp bst.in_order.collect{|e| e.data.upcase}
-pp bst.pre_order.collect{|e| e.upcase}
+pp bst.pre_order.collect{|e| e.data.upcase}
 
 puts bst.print_tree
 pp bst.left.left.left.next_in_order.data
@@ -150,9 +150,45 @@ class BinarySearchTree
     partition(left){|e| yield e}  if left.present?
     partition(right){|e| yield e} if right.present?
   end
+
+  def self.common_ancestors(a, b)
+    found = false
+    a.pre_order.each do |child_of_a|
+      found = true and break if child_of_a == b
+    end
+    return a if found
+
+    n = a
+    while !found
+      found = true and break if n.parent.blank?
+      prev_node = n
+      n = n.parent
+      direction = n.left == prev_node ? :right : :left
+      sub_tree_root = n.send(direction)
+      if sub_tree_root.present?
+        sub_tree_root.pre_order do |sub_node|
+          found = true and break if sub_node == b
+        end
+      end
+    end
+    return n if found
+    return false
+  end
 end
 
-a = %w(m d x w z a e).sort
-# b = BinarySearchTree.partition(a).collect{|e| e}
-# pp b
+a = %w(m d x w z a e 0 b).sort
+b = BinarySearchTree.partition(a).collect{|e| e}
+pp b
 puts BinarySearchTree.from_array(a).print_tree
+
+bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e' << '0' << 'b'
+puts bst.print_tree
+
+d = bst.left
+b = bst.left.left.right
+pp d == BinarySearchTree.common_ancestors(d, b)
+
+w = bst.right.left
+e = bst.left.right
+pp bst == BinarySearchTree.common_ancestors(w, d)
+pp d == BinarySearchTree.common_ancestors(e, b)
