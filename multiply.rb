@@ -40,29 +40,25 @@ def multiply_numbers(n1, n2)
   shorter_number.to_enum.with_index.reverse_each do |bottom_number, bottom_number_index|
     numbers_to_add << []
     carry = 0
-    current_decimal_place = shorter_number.size - bottom_number_index - 1
+    # bottom_number_index counts up from 0
+    current_decimal_place = shorter_number.size - 1 - bottom_number_index
     current_decimal_place.times do
       numbers_to_add.last << 0
     end
-    longer_number.to_enum.with_index.reverse_each do |top_number, top_number_index|
-      top_number_index
-      d = (bottom_number *
-           top_number).to_i
+    longer_number.reverse_each do |top_number|
+      d = (bottom_number * top_number).to_i
       ones_place = (d % 10).to_i + carry
       carry      = (d / 10).to_i
-      numbers_to_add.last.unshift(ones_place)
+      numbers_to_add.last.unshift(ones_place) # prepend
     end
     numbers_to_add.last.unshift(carry) if carry > 0
   end
   pp numbers_to_add
 
-  n3 = numbers_to_add.shift
-  numbers_to_add.each do |number|
-    n3 = sum_numbers(n3, number)
-  end
+  n3 = numbers_to_add.shift # pop from queue
+  numbers_to_add.each { |number| n3 = sum_numbers(n3, number) }
   return n3
 end
-
 
 a =  "123".split('').collect(&:to_i)
 b = "4321".split('').collect(&:to_i)
