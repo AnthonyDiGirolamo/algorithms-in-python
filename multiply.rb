@@ -4,6 +4,9 @@ require 'rubygems'
 require 'byebug'
 require 'pp'
 
+require_relative 'blank'
+using Blank
+
 def sum_numbers(one, two)
   carry = 0
   three = []

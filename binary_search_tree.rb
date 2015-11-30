@@ -3,17 +3,7 @@ require 'rubygems'
 require 'pry-byebug'
 require 'pp'
 
-module Blank
-  refine Object do
-    def blank?
-      self.respond_to?(:empty?) ? empty? : !self
-    end
-    def present?
-      !blank?
-    end
-  end
-end
-
+require_relative 'blank'
 using Blank
 
 class BSTNode
@@ -186,7 +176,15 @@ puts BinarySearchTree.from_array(a).print_tree
 
 puts '----------------------'
 
-bst = BSTNode.new('m') << 'd' << 'x' << 'w' << 'z' << 'a' << 'e' << '0' << 'b'
+bst = BSTNode.new('m') << 'd' \
+      << 'x' \
+      << 'w' \
+      << 'z' \
+      << 'a' \
+      << 'e' \
+      << '0' \
+      << 'b'
+
 puts bst.print_tree
 
 d = bst.left
@@ -196,4 +194,4 @@ pp d == BinarySearchTree.common_ancestors(d, b)
 w = bst.right.left
 e = bst.left.right
 pp bst == BinarySearchTree.common_ancestors(w, d)
-pp d == BinarySearchTree.common_ancestors(e, b)
+pp d   == BinarySearchTree.common_ancestors(e, b)

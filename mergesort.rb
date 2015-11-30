@@ -3,17 +3,7 @@
 require 'pry-byebug'
 require 'pp'
 
-module Blank
-  refine Object do
-    def blank?
-      self.respond_to?(:empty?) ? empty? : !self
-    end
-    def present?
-      !blank?
-    end
-  end
-end
-
+require_relative 'blank'
 using Blank
 
 def merge(left, right)
@@ -46,6 +36,5 @@ end
 
 a = [4, 6, 8, 3, 5667, 333, 7,
      8, 5, 2, 6, 8, 0, 9, 8]
-mergesort a
-
-# [0, 2, 3, 4, 5, 6, 6, 7, 8, 8, 8, 8, 9, 333, 5667]
+b = mergesort a
+pp(b) # [0, 2, 3, 4, 5, 6, 6, 7, 8, 8, 8, 8, 9, 333, 5667]

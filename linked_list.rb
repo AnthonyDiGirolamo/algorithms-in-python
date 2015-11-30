@@ -1,14 +1,6 @@
 #!/usr/bin/env ruby
-
-class Object
-  def blank?
-    respond_to?(:empty?) ? !!empty? : !self
-  end
-
-  def present?
-    !blank?
-  end
-end
+require_relative 'blank'
+using Blank
 
 class Node
   attr_accessor :data, :next

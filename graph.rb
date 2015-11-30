@@ -3,6 +3,9 @@ require 'rubygems'
 require 'pry-byebug'
 require 'pp'
 
+require_relative 'blank'
+using Blank
+
 class Node
   attr_accessor :links, :data
 
